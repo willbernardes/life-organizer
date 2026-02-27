@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@/components/AuthProvider";
 import {
   LayoutDashboard,
   Wallet,
@@ -18,6 +19,8 @@ import {
   Search,
   Settings,
   Sparkles,
+  Users,
+  LogOut,
 } from "lucide-react";
 
 const navSections = [
@@ -25,6 +28,12 @@ const navSections = [
     title: "Geral",
     links: [
       { href: "/", label: "Dashboard", icon: LayoutDashboard },
+    ],
+  },
+  {
+    title: "Família",
+    links: [
+      { href: "/familia", label: "Minha Família", icon: Users },
     ],
   },
   {
@@ -63,6 +72,7 @@ const navSections = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { user, profile, family, signOut } = useAuth();
 
   return (
     <aside className="sidebar">
@@ -72,6 +82,50 @@ export default function Sidebar() {
         </div>
         <h1>Life Organizer</h1>
       </div>
+
+      {/* User & Family info */}
+      {(user || profile) && (
+        <div style={{
+          padding: "12px 16px",
+          borderBottom: "1px solid var(--border-color)",
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+        }}>
+          {user?.user_metadata?.avatar_url ? (
+            <img
+              src={user.user_metadata.avatar_url}
+              alt=""
+              style={{ width: 32, height: 32, borderRadius: 8, objectFit: "cover" }}
+            />
+          ) : (
+            <div style={{
+              width: 32,
+              height: 32,
+              borderRadius: 8,
+              background: "var(--gradient-emerald)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontSize: "0.8rem",
+              fontWeight: 700,
+              color: "white",
+            }}>
+              {(profile?.full_name || "U")[0].toUpperCase()}
+            </div>
+          )}
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: "0.8rem", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {profile?.full_name || user?.user_metadata?.full_name || "Usuário"}
+            </div>
+            {family && (
+              <div style={{ fontSize: "0.65rem", color: "var(--text-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {family.name}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <nav className="sidebar-nav">
         {navSections.map((section) => (
@@ -96,11 +150,21 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div style={{ padding: "16px 12px", borderTop: "1px solid var(--border-color)" }}>
+      <div style={{ padding: "12px", borderTop: "1px solid var(--border-color)", display: "flex", flexDirection: "column", gap: 4 }}>
         <Link href="/configuracoes" className="sidebar-link">
           <Settings className="sidebar-link-icon" />
           <span>Configurações</span>
         </Link>
+        {user && (
+          <button
+            onClick={signOut}
+            className="sidebar-link"
+            style={{ background: "none", border: "none", width: "100%", textAlign: "left", fontFamily: "inherit" }}
+          >
+            <LogOut className="sidebar-link-icon" />
+            <span>Sair</span>
+          </button>
+        )}
       </div>
     </aside>
   );

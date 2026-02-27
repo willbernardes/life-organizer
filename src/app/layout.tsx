@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import Sidebar from "@/components/Sidebar";
+import AuthProvider from "@/components/AuthProvider";
+import AppShell from "@/components/AppShell";
 
 export const metadata: Metadata = {
   title: "Life Organizer — Organize toda a sua vida",
@@ -22,8 +23,9 @@ export default function RootLayout({
         />
       </head>
       <body>
-        <Sidebar />
-        <main className="main-content">{children}</main>
+        <AuthProvider>
+          <AppShell>{children}</AppShell>
+        </AuthProvider>
       </body>
     </html>
   );
