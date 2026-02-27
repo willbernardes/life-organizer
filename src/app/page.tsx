@@ -1,65 +1,248 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import Link from "next/link";
+import {
+  Wallet,
+  TrendingUp,
+  TrendingDown,
+  FolderOpen,
+  Heart,
+  Receipt,
+  ArrowUpCircle,
+  ArrowDownCircle,
+  FileText,
+  Pill,
+  Plus,
+} from "lucide-react";
+
+const stats = [
+  {
+    label: "Saldo Total",
+    value: "R$ 12.450,00",
+    trend: "+8.2% este mês",
+    trendDir: "up",
+    icon: Wallet,
+    color: "blue",
+  },
+  {
+    label: "Entradas (Mês)",
+    value: "R$ 8.500,00",
+    trend: "+12% vs mês anterior",
+    trendDir: "up",
+    icon: TrendingUp,
+    color: "emerald",
+  },
+  {
+    label: "Saídas (Mês)",
+    value: "R$ 4.230,00",
+    trend: "-3% vs mês anterior",
+    trendDir: "down",
+    icon: TrendingDown,
+    color: "rose",
+  },
+  {
+    label: "Documentos",
+    value: "24",
+    trend: "3 vencem em breve",
+    trendDir: "up",
+    icon: FolderOpen,
+    color: "amber",
+  },
+  {
+    label: "Consultas Pendentes",
+    value: "2",
+    trend: "Próxima em 5 dias",
+    trendDir: "up",
+    icon: Heart,
+    color: "purple",
+  },
+  {
+    label: "Notas Fiscais",
+    value: "48",
+    trend: "6 garantias ativas",
+    trendDir: "up",
+    icon: Receipt,
+    color: "cyan",
+  },
+];
+
+const quickActions = [
+  {
+    href: "/financeiro/entradas",
+    label: "Nova Entrada",
+    desc: "Registrar receita",
+    icon: ArrowUpCircle,
+    gradient: "var(--gradient-emerald)",
+  },
+  {
+    href: "/financeiro/saidas",
+    label: "Nova Saída",
+    desc: "Registrar despesa",
+    icon: ArrowDownCircle,
+    gradient: "var(--gradient-rose)",
+  },
+  {
+    href: "/documentos",
+    label: "Adicionar Documento",
+    desc: "Salvar no cofre",
+    icon: FileText,
+    gradient: "var(--gradient-amber)",
+  },
+  {
+    href: "/saude/medicamentos",
+    label: "Medicamento",
+    desc: "Cadastrar remédio",
+    icon: Pill,
+    gradient: "var(--gradient-blue)",
+  },
+];
+
+const recentTransactions = [
+  { desc: "Salário", date: "25/02/2026", value: "R$ 5.500,00", type: "entrada" },
+  { desc: "Aluguel", date: "23/02/2026", value: "R$ 1.800,00", type: "saida" },
+  { desc: "Freelance", date: "20/02/2026", value: "R$ 3.000,00", type: "entrada" },
+  { desc: "Supermercado", date: "19/02/2026", value: "R$ 680,00", type: "saida" },
+  { desc: "Energia Elétrica", date: "18/02/2026", value: "R$ 210,00", type: "saida" },
+];
+
+const upcomingAlerts = [
+  { label: "CNH vence em 30 dias", type: "amber" },
+  { label: "Consulta Dermatologista — 03/03", type: "purple" },
+  { label: "Garantia Notebook — vence 15/04", type: "blue" },
+];
+
+export default function Dashboard() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <div className="page-header">
+        <h1>Dashboard</h1>
+        <p>Bem-vindo ao seu organizador pessoal</p>
+      </div>
+
+      {/* Stats */}
+      <div className="stats-grid">
+        {stats.map((s) => (
+          <div className="stat-card" key={s.label}>
+            <div className={`stat-icon ${s.color}`}>
+              <s.icon size={24} />
+            </div>
+            <div className="stat-info">
+              <h3>{s.label}</h3>
+              <div className="value">{s.value}</div>
+              <div className={`trend ${s.trendDir}`}>{s.trend}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Quick Actions */}
+      <div style={{ marginBottom: 32 }}>
+        <h2 style={{ fontSize: "1.1rem", fontWeight: 600, marginBottom: 16 }}>
+          Ações Rápidas
+        </h2>
+        <div className="quick-actions">
+          {quickActions.map((a) => (
+            <Link key={a.href} href={a.href} className="quick-action-card">
+              <div
+                className="quick-action-icon"
+                style={{ background: a.gradient }}
+              >
+                <a.icon size={26} color="white" />
+              </div>
+              <h3>{a.label}</h3>
+              <p>{a.desc}</p>
+            </Link>
+          ))}
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+      </div>
+
+      {/* Recent & Alerts */}
+      <div className="data-grid">
+        <div className="card">
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: 20,
+            }}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            <h2 style={{ fontSize: "1.05rem", fontWeight: 600 }}>
+              Transações Recentes
+            </h2>
+            <Link
+              href="/financeiro"
+              style={{ fontSize: "0.8rem", color: "var(--accent-blue)" }}
+            >
+              Ver todas →
+            </Link>
+          </div>
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Descrição</th>
+                <th>Data</th>
+                <th>Valor</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentTransactions.map((t, i) => (
+                <tr key={i}>
+                  <td>{t.desc}</td>
+                  <td style={{ color: "var(--text-secondary)" }}>{t.date}</td>
+                  <td>
+                    <span
+                      className={`badge ${t.type === "entrada" ? "green" : "red"}`}
+                    >
+                      {t.type === "entrada" ? "+" : "-"} {t.value}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
-      </main>
-    </div>
+
+        <div className="card">
+          <h2
+            style={{ fontSize: "1.05rem", fontWeight: 600, marginBottom: 20 }}
+          >
+            Alertas & Lembretes
+          </h2>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+            {upcomingAlerts.map((a, i) => (
+              <div
+                key={i}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 12,
+                  padding: "12px 16px",
+                  borderRadius: 10,
+                  background: "var(--bg-secondary)",
+                  border: "1px solid var(--border-color)",
+                }}
+              >
+                <div
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: "50%",
+                    background:
+                      a.type === "amber"
+                        ? "var(--accent-amber)"
+                        : a.type === "purple"
+                          ? "var(--accent-purple)"
+                          : "var(--accent-blue)",
+                    flexShrink: 0,
+                  }}
+                />
+                <span style={{ fontSize: "0.875rem" }}>{a.label}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
